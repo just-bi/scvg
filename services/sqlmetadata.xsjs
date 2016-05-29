@@ -23,15 +23,23 @@ var sql			=	$.import(xsjslibpath + "sql" + xsjslibext);
 var httpStatus; 
 
 params.define({
+	"SCHEMA": {
+		"type": "VARCHAR"
+	}
 });
 
 function handlePost(parameters){
-	var query = [
-        $.request.body.asString(),
-  	    "\nLIMIT 0"
-    ].join("\n");
+	var query;
 	
     var conn = sql.getConnection();
+
+    query = "SET SCHEMA " + parameters.SCHEMA;
+    conn.executeUpdate(query);
+    
+    query = [
+        $.request.body.asString(),
+ 	    "\nLIMIT 0"
+    ].join("\n");
     var rs = conn.executeQuery(query);
     var metadata = rs.metadata.columns;
     

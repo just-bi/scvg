@@ -61,6 +61,45 @@ function init(ctrls) {
   }
 }
 
+function populateSchema(schemas){
+  if (arguments.length === 0) {
+	  var xhr = new XMLHttpRequest();
+	  xhr.open("GET", "../services/scvg.xsodata/schemas?$format=json", true);
+	  xhr.onreadystatechange = function(){
+	    switch (xhr.readyState){
+		  case 0:
+		    break;
+		  case 4:
+		    switch (xhr.status) {
+		      case 200:
+		    	populateSchema(JSON.parse(xhr.responseText).d.results);
+		        break;
+		      default:
+		    	throw "Error loading template";
+	        }
+		  break;
+	    }
+	  };
+	  xhr.send(null);
+	  return;
+  }	
+  var control = gEl("schema");
+  var i, n = schemas.length, schema, option;
+
+  option = cEl("OPTION");
+  control.appendChild(option);
+  
+  for (i = 0; i < n; i++) {
+	  schema = schemas[i];
+	  option = cEl("OPTION");
+	  option.value = option.label = option.textContent = schema.SCHEMA_NAME
+	  if (schema.SCHEMA_NAME === schema.CURRENT_SCHEMA) {
+		  option.selected = true;
+	  }
+	  control.appendChild(option);
+  }
+}
+
 function forEachVar(callback){
 	var tBody = variablesTable.tBodies[0], rows = tBody.rows;
 	var i, n = rows.length, row, cells, cell, name, value, input; 
@@ -118,7 +157,7 @@ function controlTouched(event){
   var id = this.id;
   var value = this.value;
   if (typeof controlValues[id] === "undefined" || controlValues[id] !== value) {
-	if (id === "sql" || this.parentNode.parentNode.parentNode.parentNode.id === "variables") {
+	if (id === "sql" || id === "schema" || this.parentNode.parentNode.parentNode.parentNode.id === "variables") {
 		if (id === "sql") {
 	      renderVariables(value);
 		}
@@ -188,7 +227,7 @@ function generateCalculationView(template){
 	viewType = viewType.options[viewType.selectedIndex].value;
     calculationView = calculationView.replace(/\$\{VIEW_TYPE\}/g, viewType);
 
-	var viewName = controls["view-name"].value;
+	var viewName = controls["view-name"].value.toUpperCase();
 	var version = controls["version-number"].value;
 	if (String(version).length < 2) {
 		version = "0" + version;
@@ -234,11 +273,8 @@ function generateCalculationView(template){
 	var n = columnMetadata.length, i, column, attributes = [], logicalAttributes = [], lenProperty, label;
 	for (i = 0; i < n; i++) {
 		column = columnMetadata[i];
-		escName = escXml(column.name);
-		label = column.label;
-		if (label === column.name) {
-			label = friendlyName(label);
-		}
+		escName = escXml(column.label);
+		label = friendlyName(escName);
 		
 		switch (column.typeName){
 		  case "NVARCHAR":
@@ -283,6 +319,11 @@ function getColumnMetadata(){
   var sql = controls["sql"].value;
   var xhr = new XMLHttpRequest();
   var url = "../services/sqlmetadata.xsjs";
+  
+  var schema = gEl("schema");
+  schema = schema.options[schema.selectedIndex].value;
+  url += "?schema=" + schema;
+  
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "text/plain");
   xhr.setRequestHeader("Accept", "application/json");
@@ -320,7 +361,9 @@ init([
   "view-name",
   "version-number",
   "view-type",
-  "description"
+  "description",
+  "schema"
 ]);
+populateSchema();
 
 })(this);
