@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" 
+  schemaVersion="2.3" 
+  id="${ID}" 
+  applyPrivilegeType="ANALYTIC_PRIVILEGE" 
+  checkAnalyticPrivileges="true" 
+  defaultClient="$$client$$" 
+  defaultLanguage="$$language$$" 
+  visibility="internal" 
+  calculationScenarioType="SCRIPT_BASED" 
+  dataCategory="${VIEW_TYPE}" 
+  enforceSqlExecution="false" 
+  executionSemantic="UNDEFINED" 
+  scriptParametersCaseSensitive="true"
+>
+  <descriptions defaultDescription="${DESCRIPTION}"/>
+  <localVariables>
+${VARIABLES}
+  </localVariables>
+  <variableMappings/>
+  <dataSources/>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:SqlScriptView" id="Script_View">
+      <viewAttributes>
+${ATTRIBUTES}
+      </viewAttributes>
+      <calculatedViewAttributes/>
+${LOCAL_VARIABLES}
+      <definition> 
+  BEGIN 
+      var_out = ${SQL};
+  END
+      </definition>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="Script_View">
+    <attributes>
+${LOGICAL_ATTRIBUTES}
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures/>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="40" y="85"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

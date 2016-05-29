@@ -1,0 +1,83 @@
+<!doctype>
+<html>
+  <head>
+    <title>HANA Scripted Calculation View Generator</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>Object name:</td>
+        <td>
+          <input id="view-name"/>
+        </td>
+        <td>Version number</td>
+        <td>
+          <input id="version-number" type="number" min="1" max="999" step="1" value="1"/>
+        </td>
+        <td>View Type:</td>
+        <td>
+          <select id="view-type">
+            <option value="CUBE">Cube</option>
+            <option selected="true" value="DEFAULT">Default</option>
+          </select>
+        </td>
+        <td>Variables:</td>
+      </tr>
+      <tr>
+        <td>Description:</td>
+        <td colspan="5"><input id="description" style="width:100%"/></td>
+        <td rowspan="100%" style="vertical-align: top">
+            <table id="variables"            
+            >
+                <thead>
+	                <tr>
+	                    <td>Name</td>
+	                    <td>Value</td>
+	                </tr>
+	            </thead>
+	            <tbody>
+	            </tbody>
+            </table>
+        </td>
+      </tr>
+      <tr>
+        <td>SQL:</td>
+        <td colspan="3"><br/></td>
+        <td>Schema:</td>
+        <select id="schema">
+        </select>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <textarea
+            id="sql"
+            rows="10"
+          ></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" >
+          <textarea
+            rows="5"
+            id="message"
+          ></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" >
+          <textarea
+            rows="10"
+            id="output"
+          ></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <a id="download"></a>
+        </td>
+      </tr>
+    </table>
+    <script src="js/main.js"></script>
+  </body>
+</html>
